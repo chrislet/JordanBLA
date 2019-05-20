@@ -2,11 +2,11 @@ package com.jordan.bla.models;
 
 import java.util.Objects;
 
-public class Fertile implements Comparable<Fertile> {
+public class FertileLand implements Comparable<FertileLand> {
 
     private int area;
 
-    public Fertile() {
+    public FertileLand() {
     }
 
     public int getArea() {
@@ -17,7 +17,7 @@ public class Fertile implements Comparable<Fertile> {
         this.area = a;
     }
 
-    public int compareTo(Fertile obj) {
+    public int compareTo(FertileLand obj) {
         return this.area - obj.area;
     }
 
@@ -27,7 +27,7 @@ public class Fertile implements Comparable<Fertile> {
     }
 
 
-    public boolean equals(Fertile obj) {
+    public boolean equals(FertileLand obj) {
         return this.area == obj.getArea();
     }
 

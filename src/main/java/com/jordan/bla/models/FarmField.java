@@ -2,7 +2,7 @@ package com.jordan.bla.models;
 
 import com.jordan.bla.services.Boundaries;
 
-public class Field {
+public class FarmField {
 
     private int lowerXbound;
     private int lowerYbound;
@@ -10,7 +10,7 @@ public class Field {
     private int upperYbound;
     private LandState[][] land;
 
-    public Field() {
+    public FarmField() {
         Boundaries boundary = new Boundaries();
         this.lowerXbound = boundary.getLowerXbound();
         this.lowerYbound = boundary.getLowerYbound();
@@ -37,7 +37,7 @@ public class Field {
         }
     }
 
-    public void addBarrenLand(Barren barrenLand) {
+    public void addBarrenLand(BarrenLand barrenLand) {
         int[] barrenLandCoordinates = barrenLand.getCoordinates();
         for (int ii = barrenLandCoordinates[0]; ii <= barrenLandCoordinates[2]; ii++) {
             for (int jj = barrenLandCoordinates[1]; jj <= barrenLandCoordinates[3]; jj++) {

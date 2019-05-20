@@ -1,8 +1,8 @@
 package com.jordan.bla.services;
 
 
-import com.jordan.bla.models.Fertile;
-import com.jordan.bla.models.Field;
+import com.jordan.bla.models.FarmField;
+import com.jordan.bla.models.FertileLand;
 import com.jordan.bla.models.LandState;
 
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import java.util.List;
 
 public class Calculator {
 
-    private LandState[][] land;
+    private LandState[][] farmFieldArray;
     private int lowerXbound;
     private int lowerYbound;
     private int upperXbound;
     private int upperYbound;
-    private List<Fertile> fertileLands = new ArrayList<>();
+    private List<FertileLand> fertileLands = new ArrayList<>();
 
 
     public Calculator() {
@@ -28,11 +28,11 @@ public class Calculator {
         this.upperYbound = boundary.getUpperYbound();
     }
 
-    public void addField(Field myField) {
-        this.land = myField.getLand();
+    public void addField(FarmField myFarmField) {
+        this.farmFieldArray = myFarmField.getLand();
     }
 
-    public List<Fertile> getFertileLands() {
+    public List<FertileLand> getFertileLands() {
         Collections.sort(fertileLands);
         return fertileLands;
     }
@@ -63,17 +63,13 @@ public class Calculator {
         }
     }
 
-    private Fertile floodFertileLand(int x, int y) {
-        this.land[x][y] = LandState.Flooded;
+    private FertileLand floodFertileLand(int x, int y) {
+        this.farmFieldArray[x][y] = LandState.Flooded;
         int area = 1;
         LandState north;
         LandState south;
         LandState east;
         LandState west;
-        boolean nblocked;
-        boolean sblocked;
-        boolean eblocked;
-        boolean wblocked;
 
         while (true) {
 
@@ -87,7 +83,7 @@ public class Calculator {
                 case Fertile:
                     y++;
                     area++;
-                    this.land[x][y] = LandState.Flooded;
+                    this.farmFieldArray[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
@@ -102,7 +98,7 @@ public class Calculator {
                 case Fertile:
                     y--;
                     area++;
-                    this.land[x][y] = LandState.Flooded;
+                    this.farmFieldArray[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
@@ -117,7 +113,7 @@ public class Calculator {
                 case Fertile:
                     x++;
                     area++;
-                    this.land[x][y] = LandState.Flooded;
+                    this.farmFieldArray[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
@@ -132,21 +128,21 @@ public class Calculator {
                 case Fertile:
                     x--;
                     area++;
-                    this.land[x][y] = LandState.Flooded;
+                    this.farmFieldArray[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
 
             int[] coords;
-            
+
             try {
                 coords = findFloodTouchingFertile();
             } catch (DoneFloodingException ex) {
                 //We must be done flooding
                 //System.out.println("I've finished flooding");
-                Fertile myFertile = new Fertile();
-                myFertile.setArea(area);
-                return myFertile;
+                FertileLand myFertileLand = new FertileLand();
+                myFertileLand.setArea(area);
+                return myFertileLand;
             }
 
             //We are not done flooding
@@ -166,7 +162,7 @@ public class Calculator {
         xLoop:
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
-                if (land[ii][jj] == LandState.Fertile) {
+                if (farmFieldArray[ii][jj] == LandState.Fertile) {
                     xCoord = ii;
                     yCoord = jj;
                     break xLoop;
@@ -179,6 +175,37 @@ public class Calculator {
         nextFertileLand[0] = xCoord;
         nextFertileLand[1] = yCoord;
         return nextFertileLand;
+    }
+
+    private int[] findFloodTouchingFertile() throws DoneFloodingException {
+        int[] coords = new int[2];
+        coords[0] = -1;
+        coords[1] = -1;
+        for (int ii = lowerXbound; ii <= upperXbound; ii++) {
+            for (int jj = lowerYbound; jj <= upperYbound; jj++) {
+
+                if (farmFieldArray[ii][jj] == LandState.Barren || farmFieldArray[ii][jj] == LandState.Fertile) {
+                    //System.out.println("done?");
+                    continue;
+                }
+
+                //Look around here for unflooded, but still fertile land
+                if (farmFieldArray[ii][jj] == LandState.Flooded) {
+
+                    try {
+                        coords = isNearFertileLand(ii, jj);
+                        return coords;
+                    } catch (NoFertileLandSurroundingException e) {
+                        //There's nothing here, let's find somewhere else
+
+                    }
+
+                }
+            }
+        }
+
+        throw new DoneFloodingException("Done flooding.");
+
     }
 
     private int[] isNearFertileLand(int x, int y) throws NoFertileLandSurroundingException {
@@ -237,43 +264,11 @@ public class Calculator {
         throw new NoFertileLandSurroundingException("No more fertile land here.");
     }
 
-    private int[] findFloodTouchingFertile() throws DoneFloodingException {
-        int[] coords = new int[2];
-        coords[0] = -1;
-        coords[1] = -1;
-        for (int ii = lowerXbound; ii <= upperXbound; ii++) {
-            for (int jj = lowerYbound; jj <= upperYbound; jj++) {
-
-                //0 indicates barren land, 1 indicates fertile land
-                if (land[ii][jj] == LandState.Barren || land[ii][jj] == LandState.Fertile) {
-                    //System.out.println("done?");
-                    continue;
-                }
-
-                //2 indicates flooded land, look around here for unflooded, but still fertile land
-                if (land[ii][jj] == LandState.Flooded) {
-
-                    try {
-                        coords = isNearFertileLand(ii, jj);
-                        return coords;
-                    } catch (NoFertileLandSurroundingException e) {
-                        //There's nothing here, let's find somewhere else
-
-                    }
-
-                }
-            }
-        }
-
-        throw new DoneFloodingException("Done flooding.");
-
-    }
-
     private LandState lookN(int x, int y) {
         if (y >= upperYbound) {
             return LandState.OutOfBounds;
         } else {
-            return land[x][y + 1];
+            return farmFieldArray[x][y + 1];
         }
     }
 
@@ -281,7 +276,7 @@ public class Calculator {
         if (y <= lowerYbound) {
             return LandState.OutOfBounds;
         } else {
-            return land[x][y - 1];
+            return farmFieldArray[x][y - 1];
         }
     }
 
@@ -289,7 +284,7 @@ public class Calculator {
         if (x >= upperXbound) {
             return LandState.OutOfBounds;
         } else {
-            return land[x + 1][y];
+            return farmFieldArray[x + 1][y];
         }
     }
 
@@ -297,7 +292,7 @@ public class Calculator {
         if (x <= lowerXbound) {
             return LandState.OutOfBounds;
         } else {
-            return land[x - 1][y];
+            return farmFieldArray[x - 1][y];
         }
     }
 

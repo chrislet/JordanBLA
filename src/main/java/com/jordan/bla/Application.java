@@ -1,9 +1,9 @@
 package com.jordan.bla;
 
 
-import com.jordan.bla.models.Barren;
-import com.jordan.bla.models.Fertile;
-import com.jordan.bla.models.Field;
+import com.jordan.bla.models.BarrenLand;
+import com.jordan.bla.models.FarmField;
+import com.jordan.bla.models.FertileLand;
 import com.jordan.bla.services.Calculator;
 import com.jordan.bla.services.Interpreter;
 
@@ -20,7 +20,7 @@ public class Application {
         System.out.println("Please input barren land.  Expected format is 4 numbers, " +
                 "denoting bottom left to top right.");
         System.out.println("x y X Y ");
-        System.out.println("You can input multiple barren sections at once.");
+        System.out.println("You can input multiple barren sections on one line.");
         while (scan.hasNextLine()) {
 
             input = scan.nextLine();
@@ -51,22 +51,22 @@ public class Application {
             //System.out.println("You typed " + input);
             //System.out.println("I parsed " +  Arrays.toString(dataPointsInt));
 
-            Field myField = new Field();
-            myField.createLand();
+            FarmField myFarmField = new FarmField();
+            myFarmField.createLand();
             int[] barrenPoints = new int[4];
             for (int ii = 0; ii < dataPointsInt.length; ii += 4) {
                 barrenPoints[0] = dataPointsInt[ii];
                 barrenPoints[1] = dataPointsInt[ii + 1];
                 barrenPoints[2] = dataPointsInt[ii + 2];
                 barrenPoints[3] = dataPointsInt[ii + 3];
-                Barren aBarren = new Barren();
-                aBarren.setCoordinates(barrenPoints);
-                myField.addBarrenLand(aBarren);
+                BarrenLand aBarrenLand = new BarrenLand();
+                aBarrenLand.setCoordinates(barrenPoints);
+                myFarmField.addBarrenLand(aBarrenLand);
 
             }
 
             /*
-            int [] [] tempLand = myField.getLand();
+            int [] [] tempLand = myFarmField.getLand();
             for (int ii = tempLand.length - 1; ii >= 0; ii--){
                 for (int jj = 0; jj < tempLand[0].length; jj++) {
                     System.out.print(tempLand[ii][jj]);
@@ -77,14 +77,14 @@ public class Application {
 
             Calculator calc = new Calculator();
 
-            calc.addField(myField);
+            calc.addField(myFarmField);
 
             calc.calculate();
 
-            List<Fertile> myFertileLands = calc.getFertileLands();
+            List<FertileLand> myFertileLands = calc.getFertileLands();
 
             //System.out.println("Number of fertile lands is "+ myFertileLands.size());
-            for (Fertile land : myFertileLands) {
+            for (FertileLand land : myFertileLands) {
                 System.out.print(land.getArea() + " ");
             }
             System.out.println(" ");

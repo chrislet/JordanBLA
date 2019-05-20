@@ -1,10 +1,10 @@
 package com.jordan.bla.models;
 
-public class Barren {
+public class BarrenLand {
 
     private int[] coordinates = new int[4];
 
-    public Barren() {
+    public BarrenLand() {
 
     }
 
@@ -16,7 +16,7 @@ public class Barren {
     public void setCoordinates(int[] barrenLand) {
 
         if (barrenLand.length != 4) {
-            throw new ArrayIndexOutOfBoundsException("Barren land needs 4 points, you gave me " + barrenLand.length);
+            throw new ArrayIndexOutOfBoundsException("BarrenLand land needs 4 points, you gave me " + barrenLand.length);
         }
         this.coordinates = barrenLand;
     }
