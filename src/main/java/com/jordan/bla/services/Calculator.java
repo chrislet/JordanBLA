@@ -3,14 +3,16 @@ package com.jordan.bla.services;
 
 import com.jordan.bla.models.Fertile;
 import com.jordan.bla.models.Field;
+import com.jordan.bla.models.LandState;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class Calculator {
 
-    private int[][] land;
+    private LandState[][] land;
     private int lowerXbound;
     private int lowerYbound;
     private int upperXbound;
@@ -62,12 +64,12 @@ public class Calculator {
     }
 
     private Fertile floodFertileLand(int x, int y) {
-        this.land[x][y] = 2;
+        this.land[x][y] = LandState.Flooded;
         int area = 1;
-        int n;
-        int s;
-        int e;
-        int w;
+        LandState north;
+        LandState south;
+        LandState east;
+        LandState west;
         boolean nblocked;
         boolean sblocked;
         boolean eblocked;
@@ -75,91 +77,81 @@ public class Calculator {
 
         while (true) {
 
-            nblocked = false;
-            sblocked = false;
-            eblocked = false;
-            wblocked = false;
-
             //First we look N
-            n = lookN(x, y);
-            switch (n) {
-                case -1:
-                case 0:
-                case 2:
-                    nblocked = true;
+            north = lookN(x, y);
+            switch (north) {
+                case OutOfBounds:
+                case Barren:
+                case Flooded:
                     break;
-                case 1:
+                case Fertile:
                     y++;
                     area++;
-                    this.land[x][y] = 2;
+                    this.land[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
 
             //Then S
-            s = lookS(x, y);
-            switch (s) {
-                case -1:
-                case 0:
-                case 2:
-                    sblocked = true;
+            south = lookS(x, y);
+            switch (south) {
+                case OutOfBounds:
+                case Barren:
+                case Flooded:
                     break;
-                case 1:
+                case Fertile:
                     y--;
                     area++;
-                    this.land[x][y] = 2;
+                    this.land[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
 
             //Then E
-            e = lookE(x, y);
-            switch (e) {
-                case -1:
-                case 0:
-                case 2:
-                    eblocked = true;
+            east = lookE(x, y);
+            switch (east) {
+                case OutOfBounds:
+                case Barren:
+                case Flooded:
                     break;
-                case 1:
+                case Fertile:
                     x++;
                     area++;
-                    this.land[x][y] = 2;
+                    this.land[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
 
             //Then W
-            w = lookW(x, y);
-            switch (w) {
-                case -1:
-                case 0:
-                case 2:
-                    wblocked = true;
+            west = lookW(x, y);
+            switch (west) {
+                case OutOfBounds:
+                case Barren:
+                case Flooded:
                     break;
-                case 1:
+                case Fertile:
                     x--;
                     area++;
-                    this.land[x][y] = 2;
+                    this.land[x][y] = LandState.Flooded;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
             }
 
             int[] coords;
-            if (nblocked && sblocked && eblocked && wblocked) {
-                try {
-                    coords = findFloodTouchingFertile();
-                } catch (DoneFloodingException ex) {
-                    //We must be done flooding
-                    //System.out.println("I've finished flooding");
-                    Fertile myFertile = new Fertile();
-                    myFertile.setArea(area);
-                    return myFertile;
-                }
-
-                //We are not done flooding
-                x = coords[0];
-                y = coords[1];
+            
+            try {
+                coords = findFloodTouchingFertile();
+            } catch (DoneFloodingException ex) {
+                //We must be done flooding
+                //System.out.println("I've finished flooding");
+                Fertile myFertile = new Fertile();
+                myFertile.setArea(area);
+                return myFertile;
             }
+
+            //We are not done flooding
+            x = coords[0];
+            y = coords[1];
 
 
         }
@@ -174,7 +166,7 @@ public class Calculator {
         xLoop:
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
-                if (land[ii][jj] == 1) {
+                if (land[ii][jj] == LandState.Fertile) {
                     xCoord = ii;
                     yCoord = jj;
                     break xLoop;
@@ -191,54 +183,54 @@ public class Calculator {
 
     private int[] isNearFertileLand(int x, int y) throws NoFertileLandSurroundingException {
         int[] coords = new int[2];
-        int north;
-        int south;
-        int east;
-        int west;
+        LandState north;
+        LandState south;
+        LandState east;
+        LandState west;
         coords[0] = x;
         coords[1] = y;
 
         //First we look N
         north = lookN(x, y);
         switch (north) {
-            case -1:
-            case 0:
-            case 2:
+            case OutOfBounds:
+            case Barren:
+            case Flooded:
                 break;
-            case 1:
+            case Fertile:
                 return coords;
         }
 
         //Then S
         south = lookS(x, y);
         switch (south) {
-            case -1:
-            case 0:
-            case 2:
+            case OutOfBounds:
+            case Barren:
+            case Flooded:
                 break;
-            case 1:
+            case Fertile:
                 return coords;
         }
 
         //Then E
         east = lookE(x, y);
         switch (east) {
-            case -1:
-            case 0:
-            case 2:
+            case OutOfBounds:
+            case Barren:
+            case Flooded:
                 break;
-            case 1:
+            case Fertile:
                 return coords;
         }
 
         //Then W
         west = lookW(x, y);
         switch (west) {
-            case -1:
-            case 0:
-            case 2:
+            case OutOfBounds:
+            case Barren:
+            case Flooded:
                 break;
-            case 1:
+            case Fertile:
                 return coords;
         }
 
@@ -253,13 +245,13 @@ public class Calculator {
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
 
                 //0 indicates barren land, 1 indicates fertile land
-                if (land[ii][jj] == 0 || land[ii][jj] == 1) {
+                if (land[ii][jj] == LandState.Barren || land[ii][jj] == LandState.Fertile) {
                     //System.out.println("done?");
                     continue;
                 }
 
                 //2 indicates flooded land, look around here for unflooded, but still fertile land
-                if (land[ii][jj] == 2) {
+                if (land[ii][jj] == LandState.Flooded) {
 
                     try {
                         coords = isNearFertileLand(ii, jj);
@@ -277,47 +269,48 @@ public class Calculator {
 
     }
 
-    private int lookN(int x, int y) {
+    private LandState lookN(int x, int y) {
         if (y >= upperYbound) {
-            return -1;
+            return LandState.OutOfBounds;
         } else {
             return land[x][y + 1];
         }
     }
 
-    private int lookS(int x, int y) {
+    private LandState lookS(int x, int y) {
         if (y <= lowerYbound) {
-            return -1;
+            return LandState.OutOfBounds;
         } else {
             return land[x][y - 1];
         }
     }
 
-    private int lookE(int x, int y) {
+    private LandState lookE(int x, int y) {
         if (x >= upperXbound) {
-            return -1;
+            return LandState.OutOfBounds;
         } else {
             return land[x + 1][y];
         }
     }
 
-    private int lookW(int x, int y) {
+    private LandState lookW(int x, int y) {
         if (x <= lowerXbound) {
-            return -1;
+            return LandState.OutOfBounds;
         } else {
             return land[x - 1][y];
         }
     }
 
     private class DoneFloodingException extends Throwable {
-        public DoneFloodingException(String message) {
+        private DoneFloodingException(String message) {
             super(message);
         }
     }
 
     private class NoFertileLandSurroundingException extends Throwable {
-        public NoFertileLandSurroundingException(String message) {
+        private NoFertileLandSurroundingException(String message) {
             super(message);
         }
     }
+
 }

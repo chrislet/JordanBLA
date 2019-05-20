@@ -8,8 +8,7 @@ public class Field {
     private int lowerYbound;
     private int upperXbound;
     private int upperYbound;
-    private int[][] land;
-
+    private LandState[][] land;
 
     public Field() {
         Boundaries boundary = new Boundaries();
@@ -22,18 +21,18 @@ public class Field {
 
     public void createLand() {
 
-        this.land = new int[upperXbound + 1][upperYbound + 1];
+        this.land = new LandState[upperXbound + 1][upperYbound + 1];
 
         //For fields that don't start at 0,0
         for (int ii = 0; ii <= upperXbound; ii++) {
             for (int jj = 0; jj <= upperYbound; jj++) {
-                this.land[ii][jj] = 0;
+                this.land[ii][jj] = LandState.Barren;
             }
         }
 
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
-                this.land[ii][jj] = 1;
+                this.land[ii][jj] = LandState.Fertile;
             }
         }
     }
@@ -42,12 +41,12 @@ public class Field {
         int[] barrenLandCoordinates = barrenLand.getCoordinates();
         for (int ii = barrenLandCoordinates[0]; ii <= barrenLandCoordinates[2]; ii++) {
             for (int jj = barrenLandCoordinates[1]; jj <= barrenLandCoordinates[3]; jj++) {
-                this.land[ii][jj] = 0;
+                this.land[ii][jj] = LandState.Barren;
             }
         }
     }
 
-    public int[][] getLand() {
+    public LandState[][] getLand() {
         return this.land;
     }
 }
