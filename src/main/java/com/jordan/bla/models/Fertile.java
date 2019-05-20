@@ -6,20 +6,19 @@ public class Fertile implements Comparable<Fertile> {
 
     private int area;
 
-    public void Fertile (){
+    public Fertile() {
     }
 
-    public void setArea(int a){
-        this.area = a;
-    }
-    public int getArea(){
+    public int getArea() {
         return area;
     }
 
+    public void setArea(int a) {
+        this.area = a;
+    }
 
     public int compareTo(Fertile obj) {
-        int comparison = this.area - obj.area;
-        return comparison;
+        return this.area - obj.area;
     }
 
     @Override
@@ -29,12 +28,7 @@ public class Fertile implements Comparable<Fertile> {
 
 
     public boolean equals(Fertile obj) {
-        if (this.area == obj.getArea()){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return this.area == obj.getArea();
     }
 
 

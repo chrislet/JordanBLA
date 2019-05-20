@@ -1,17 +1,12 @@
 package com.jordan.bla.services;
 
 
-
 import com.jordan.bla.models.Fertile;
 import com.jordan.bla.models.Field;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 public class Calculator {
 
@@ -23,33 +18,15 @@ public class Calculator {
     private List<Fertile> fertileLands = new ArrayList<>();
 
 
-    public void Calculator() {
+    public Calculator() {
+        Boundaries boundary = new Boundaries();
+        this.lowerXbound = boundary.getLowerXbound();
+        this.lowerYbound = boundary.getLowerYbound();
+        this.upperXbound = boundary.getUpperXbound();
+        this.upperYbound = boundary.getUpperYbound();
     }
 
-    public void addField (Field myField){
-        try {
-            InputStream input = new FileInputStream("src/main/resources/BarrenLand.properties");
-            Properties propFile = new Properties();
-            if (input == null){
-                System.out.println("Unable to load properties file.");
-                System.exit(1);
-            }
-            propFile.load(input);
-            input.close();
-            //Set boundaries
-            this.lowerXbound = Integer.parseInt(propFile.getProperty("field.lowerXbound"));
-            this.lowerYbound = Integer.parseInt(propFile.getProperty("field.lowerYbound"));
-            this.upperXbound = Integer.parseInt(propFile.getProperty("field.upperXbound"));
-            this.upperYbound = Integer.parseInt(propFile.getProperty("field.upperYbound"));
-        } catch (IOException e) {
-            System.out.println("Unable to load properties file.");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (NumberFormatException e){
-            System.out.println("Properties file is misconfigured.");
-            e.printStackTrace();
-            System.exit(1);
-        }
+    public void addField(Field myField) {
         this.land = myField.getLand();
     }
 
@@ -70,23 +47,18 @@ public class Calculator {
         }
 
 
-            while (true) {
-                int x = nextFertileLand[0];
-                int y = nextFertileLand[1];
+        while (true) {
+            int x = nextFertileLand[0];
+            int y = nextFertileLand[1];
 
-                this.fertileLands.add(floodFertileLand(x,y));
-                try{
-                    nextFertileLand = findNextFertileLand();
-                }
-                catch(ArrayIndexOutOfBoundsException e) {
-                    //There's no more fertile land to add to our list
-                    break;
-                }
+            this.fertileLands.add(floodFertileLand(x, y));
+            try {
+                nextFertileLand = findNextFertileLand();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                //There's no more fertile land to add to our list
+                break;
+            }
         }
-        return;
-
-
-
     }
 
     private Fertile floodFertileLand(int x, int y) {
@@ -101,39 +73,19 @@ public class Calculator {
         boolean eblocked;
         boolean wblocked;
 
-        while (true){
+        while (true) {
 
             nblocked = false;
             sblocked = false;
             eblocked = false;
             wblocked = false;
 
-            try {//First we look N
-                n = lookN(x,y);
-            }catch(ArrayIndexOutOfBoundsException ex){
-                n = -1;
-            }
-            try {//Then S
-                s = lookS(x,y);
-            }catch(ArrayIndexOutOfBoundsException ex){
-                s = -1;
-            }
-            try {//Then E
-                e = lookE(x,y);
-            }catch(ArrayIndexOutOfBoundsException ex){
-                e = -1;
-            }
-            try {//Then W
-                w = lookW(x,y);
-            }catch(ArrayIndexOutOfBoundsException ex){
-                w = -1;
-            }
-
+            //First we look N
+            n = lookN(x, y);
             switch (n) {
                 case -1:
-                    nblocked = true;
-                    break;
                 case 0:
+                case 2:
                     nblocked = true;
                     break;
                 case 1:
@@ -142,15 +94,14 @@ public class Calculator {
                     this.land[x][y] = 2;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
-                case 2:
-                    nblocked = true;
-                    break;
             }
+
+            //Then S
+            s = lookS(x, y);
             switch (s) {
                 case -1:
-                    sblocked = true;
-                    break;
                 case 0:
+                case 2:
                     sblocked = true;
                     break;
                 case 1:
@@ -159,15 +110,14 @@ public class Calculator {
                     this.land[x][y] = 2;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
-                case 2:
-                    sblocked = true;
-                    break;
             }
+
+            //Then E
+            e = lookE(x, y);
             switch (e) {
                 case -1:
-                    eblocked = true;
-                    break;
                 case 0:
+                case 2:
                     eblocked = true;
                     break;
                 case 1:
@@ -176,15 +126,14 @@ public class Calculator {
                     this.land[x][y] = 2;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
-                case 2:
-                    eblocked = true;
-                    break;
             }
+
+            //Then W
+            w = lookW(x, y);
             switch (w) {
                 case -1:
-                    wblocked = true;
-                    break;
                 case 0:
+                case 2:
                     wblocked = true;
                     break;
                 case 1:
@@ -193,16 +142,14 @@ public class Calculator {
                     this.land[x][y] = 2;
                     //System.out.println("Flooded " + x + " and " + y + " ");
                     continue;
-                case 2:
-                    wblocked = true;
-                    break;
             }
-            int [] coords;
-            if (nblocked && sblocked && eblocked && wblocked ){
-                try{ coords = stillFlooding();
-                }
-                catch (DoneFloodingException ex){
-                 //We must be done flooding
+
+            int[] coords;
+            if (nblocked && sblocked && eblocked && wblocked) {
+                try {
+                    coords = findFloodTouchingFertile();
+                } catch (DoneFloodingException ex) {
+                    //We must be done flooding
                     //System.out.println("I've finished flooding");
                     Fertile myFertile = new Fertile();
                     myFertile.setArea(area);
@@ -210,8 +157,8 @@ public class Calculator {
                 }
 
                 //We are not done flooding
-                x = coords [0];
-                y = coords [1];
+                x = coords[0];
+                y = coords[1];
             }
 
 
@@ -226,7 +173,6 @@ public class Calculator {
         int[] nextFertileLand = new int[2];
         xLoop:
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
-            yLoop:
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
                 if (land[ii][jj] == 1) {
                     xCoord = ii;
@@ -235,7 +181,7 @@ public class Calculator {
                 }
             }
         }
-        if (xCoord == -1 || yCoord == -1) {
+        if (xCoord == -1) {
             throw new ArrayIndexOutOfBoundsException("There is no more fertile land.");
         }
         nextFertileLand[0] = xCoord;
@@ -243,101 +189,82 @@ public class Calculator {
         return nextFertileLand;
     }
 
-    private int[] floodTouchingFertile(int x, int y) throws NoFertileLandSurroundingException {
+    private int[] isNearFertileLand(int x, int y) throws NoFertileLandSurroundingException {
         int[] coords = new int[2];
-        int n;
-        int s;
-        int e;
-        int w;
-        coords [0] = x;
-        coords [1] = y;
+        int north;
+        int south;
+        int east;
+        int west;
+        coords[0] = x;
+        coords[1] = y;
 
-        try {//First we look N
-            n = lookN(x,y);
-        }catch(ArrayIndexOutOfBoundsException ex){
-            n = -1;
-        }
-        try {//Then S
-            s = lookS(x,y);
-        }catch(ArrayIndexOutOfBoundsException ex){
-            s = -1;
-        }
-        try {//Then E
-            e = lookE(x,y);
-        }catch(ArrayIndexOutOfBoundsException ex){
-            e = -1;
-        }
-        try {//Then W
-            w = lookW(x,y);
-        }catch(ArrayIndexOutOfBoundsException ex){
-            w = -1;
+        //First we look N
+        north = lookN(x, y);
+        switch (north) {
+            case -1:
+            case 0:
+            case 2:
+                break;
+            case 1:
+                return coords;
         }
 
-        switch (n){
+        //Then S
+        south = lookS(x, y);
+        switch (south) {
             case -1:
-                break;
             case 0:
+            case 2:
                 break;
             case 1:
                 return coords;
-            case 2:
-                break;
         }
-        switch (s){
+
+        //Then E
+        east = lookE(x, y);
+        switch (east) {
             case -1:
-                break;
             case 0:
+            case 2:
                 break;
             case 1:
                 return coords;
-            case 2:
-                break;
         }
-        switch (e){
+
+        //Then W
+        west = lookW(x, y);
+        switch (west) {
             case -1:
-                break;
             case 0:
+            case 2:
                 break;
             case 1:
                 return coords;
-            case 2:
-                break;
         }
-        switch (w){
-            case -1:
-                break;
-            case 0:
-                break;
-            case 1:
-                return coords;
-            case 2:
-                break;
-        }
+
         throw new NoFertileLandSurroundingException("No more fertile land here.");
     }
 
-    private int[] stillFlooding() throws DoneFloodingException {
-        int [] coords = new int [2];
-        coords [0] = -1;
-        coords [1] = -1;
-        xLoop:
+    private int[] findFloodTouchingFertile() throws DoneFloodingException {
+        int[] coords = new int[2];
+        coords[0] = -1;
+        coords[1] = -1;
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
-            yLoop:
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
 
                 //0 indicates barren land, 1 indicates fertile land
                 if (land[ii][jj] == 0 || land[ii][jj] == 1) {
                     //System.out.println("done?");
-                    continue yLoop;
+                    continue;
                 }
 
                 //2 indicates flooded land, look around here for unflooded, but still fertile land
                 if (land[ii][jj] == 2) {
 
-                    try{
-                        coords = floodTouchingFertile(ii, jj);
+                    try {
+                        coords = isNearFertileLand(ii, jj);
                         return coords;
-                    }catch(NoFertileLandSurroundingException e){
+                    } catch (NoFertileLandSurroundingException e) {
                         //There's nothing here, let's find somewhere else
 
                     }
@@ -345,41 +272,38 @@ public class Calculator {
                 }
             }
         }
-        if (coords[0] == -1 || coords[1] == -1) {
-            throw new DoneFloodingException("Done flooding.");
-        }
-        else {
-            return coords;
-        }
+
+        throw new DoneFloodingException("Done flooding.");
+
     }
 
-    private int lookN(int x, int y) throws ArrayIndexOutOfBoundsException {
-        if (y == upperYbound) {
-            throw new ArrayIndexOutOfBoundsException("Out of bounds");
+    private int lookN(int x, int y) {
+        if (y >= upperYbound) {
+            return -1;
         } else {
             return land[x][y + 1];
         }
     }
 
-    private int lookS(int x, int y) throws ArrayIndexOutOfBoundsException {
-        if (y == lowerYbound) {
-            throw new ArrayIndexOutOfBoundsException("Out of bounds");
+    private int lookS(int x, int y) {
+        if (y <= lowerYbound) {
+            return -1;
         } else {
             return land[x][y - 1];
         }
     }
 
-    private int lookE(int x, int y) throws ArrayIndexOutOfBoundsException {
-        if (x == upperXbound) {
-            throw new ArrayIndexOutOfBoundsException("Out of bounds");
+    private int lookE(int x, int y) {
+        if (x >= upperXbound) {
+            return -1;
         } else {
             return land[x + 1][y];
         }
     }
 
-    private int lookW(int x, int y) throws ArrayIndexOutOfBoundsException {
-        if (x == lowerXbound) {
-            throw new ArrayIndexOutOfBoundsException("Out of bounds");
+    private int lookW(int x, int y) {
+        if (x <= lowerXbound) {
+            return -1;
         } else {
             return land[x - 1][y];
         }
@@ -392,6 +316,8 @@ public class Calculator {
     }
 
     private class NoFertileLandSurroundingException extends Throwable {
-        public NoFertileLandSurroundingException(String message) { super(message) ; }
+        public NoFertileLandSurroundingException(String message) {
+            super(message);
+        }
     }
 }

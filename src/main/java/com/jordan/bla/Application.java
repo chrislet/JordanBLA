@@ -7,49 +7,42 @@ import com.jordan.bla.models.Field;
 import com.jordan.bla.services.Calculator;
 import com.jordan.bla.services.Interpreter;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Application {
-    public static void main (String args[]) {
+    public static void main(String[] args) {
 
         Scanner scan = new Scanner(System.in);
         String input;
-        int [] dataPointsInt;
+        int[] dataPointsInt;
+        System.out.println("Please input barren land.  Expected format is 4 numbers, " +
+                "denoting bottom left to top right.");
+        System.out.println("x y X Y ");
+        System.out.println("You can input multiple barren sections at once.");
+        while (scan.hasNextLine()) {
 
-        while (true){
-            System.out.println("Type \"exit\" to end the program.");
-             input = scan.nextLine();
+            input = scan.nextLine();
             Interpreter interpret = new Interpreter();
-            try{
+            try {
                 dataPointsInt = interpret.parseInput(input);
-            }
-            catch (Interpreter.LandOutOfBoundsException e){
+            } catch (Interpreter.LandOutOfBoundsException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your barren land was outside of the boundary of the total land.");
                 System.out.println("Please try again.");
                 continue;
-            }
-            catch (Interpreter.LandInputOutOfOrderException e){
+            } catch (Interpreter.LandInputOutOfOrderException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your barren land was not input with bottom left first, followed by top right.");
                 System.out.println("Please try again.");
                 continue;
-            }
-            catch (Interpreter.InsufficientDataPointsException e){
+            } catch (Interpreter.InsufficientDataPointsException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your barren land did not have sufficient data points to draw a rectangle.");
                 System.out.println("Please try again.");
                 continue;
-            }
-            catch (NumberFormatException e){
-                System.out.println(e.getMessage());
-                System.out.println("Your input could not be parsed into integers.");
-                System.out.println("Please try again.");
-                continue;
-            }
-            catch (NullPointerException e){
+            } catch (NumberFormatException | NullPointerException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your input could not be parsed into integers.");
                 System.out.println("Please try again.");
@@ -58,14 +51,14 @@ public class Application {
             //System.out.println("You typed " + input);
             //System.out.println("I parsed " +  Arrays.toString(dataPointsInt));
 
-            Field myField = new Field ();
+            Field myField = new Field();
             myField.createLand();
-            int [] barrenPoints = new int [4];
-            for (int ii = 0; ii < dataPointsInt.length; ii+= 4){
-                barrenPoints [0] = dataPointsInt [ii];
-                barrenPoints [1] = dataPointsInt [ii+1];
-                barrenPoints [2] = dataPointsInt [ii+2];
-                barrenPoints [3] = dataPointsInt [ii+3];
+            int[] barrenPoints = new int[4];
+            for (int ii = 0; ii < dataPointsInt.length; ii += 4) {
+                barrenPoints[0] = dataPointsInt[ii];
+                barrenPoints[1] = dataPointsInt[ii + 1];
+                barrenPoints[2] = dataPointsInt[ii + 2];
+                barrenPoints[3] = dataPointsInt[ii + 3];
                 Barren aBarren = new Barren();
                 aBarren.setCoordinates(barrenPoints);
                 myField.addBarrenLand(aBarren);
@@ -82,7 +75,7 @@ public class Application {
             }
             */
 
-            Calculator calc = new Calculator ();
+            Calculator calc = new Calculator();
 
             calc.addField(myField);
 
@@ -91,11 +84,12 @@ public class Application {
             List<Fertile> myFertileLands = calc.getFertileLands();
 
             //System.out.println("Number of fertile lands is "+ myFertileLands.size());
-            for (Fertile land : myFertileLands){
-                System.out.printf(land.getArea() + " ");
+            for (Fertile land : myFertileLands) {
+                System.out.print(land.getArea() + " ");
             }
             System.out.println(" ");
-
+            System.out.println("Awaiting further input.");
+            System.out.println("Type \"exit\" to end the program.");
         }
 
     }
