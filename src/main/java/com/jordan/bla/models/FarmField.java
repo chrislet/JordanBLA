@@ -20,16 +20,16 @@ public class FarmField {
     }
 
     public void createLand() {
-
+        //Include the + 1 to allow the last coordinate of the field to be included in the array.
         this.land = new LandState[upperXbound + 1][upperYbound + 1];
 
-        //For fields that don't start at 0,0
+        //Initialize the entire Farm Field as Barren land.
         for (int ii = 0; ii <= upperXbound; ii++) {
             for (int jj = 0; jj <= upperYbound; jj++) {
                 this.land[ii][jj] = LandState.Barren;
             }
         }
-
+        //Starting at the lower bound, mark our Farm Field as Fertile land.
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
                 this.land[ii][jj] = LandState.Fertile;
@@ -37,6 +37,8 @@ public class FarmField {
         }
     }
 
+    //Grab the coordinates of a Barren land object's bottom left and top right positions.
+    //Iterate from the bottom left to the top right, and mark the Farm Field as Barren at those coordinates.
     public void addBarrenLand(BarrenLand barrenLand) {
         int[] barrenLandCoordinates = barrenLand.getCoordinates();
         for (int ii = barrenLandCoordinates[0]; ii <= barrenLandCoordinates[2]; ii++) {

@@ -4,6 +4,7 @@ package com.jordan.bla;
 import com.jordan.bla.models.BarrenLand;
 import com.jordan.bla.models.FarmField;
 import com.jordan.bla.models.FertileLand;
+import com.jordan.bla.models.LandState;
 import com.jordan.bla.services.Calculator;
 import com.jordan.bla.services.Interpreter;
 
@@ -20,7 +21,7 @@ public class Application {
         System.out.println("Please input barren land.  Expected format is 4 numbers, " +
                 "denoting bottom left to top right.");
         System.out.println("x y X Y ");
-        System.out.println("You can input multiple barren sections on one line.");
+        System.out.println("You can input multiple barren sections on one line, or type \"exit\" to end the program.");
         while (scan.hasNextLine()) {
 
             input = scan.nextLine();
@@ -48,11 +49,12 @@ public class Application {
                 System.out.println("Please try again.");
                 continue;
             }
-            //System.out.println("You typed " + input);
-            //System.out.println("I parsed " +  Arrays.toString(dataPointsInt));
 
+            //Create our FarmField
             FarmField myFarmField = new FarmField();
             myFarmField.createLand();
+
+            //Chop our input into individual BarrenLand objects, and add them to the FarmField
             int[] barrenPoints = new int[4];
             for (int ii = 0; ii < dataPointsInt.length; ii += 4) {
                 barrenPoints[0] = dataPointsInt[ii];
@@ -65,25 +67,28 @@ public class Application {
 
             }
 
+            //Useful FarmField printer, not advisable to uncomment for large size FarmFields
             /*
-            int [] [] tempLand = myFarmField.getLand();
+            LandState[] [] tempLand = myFarmField.getLand();
             for (int ii = tempLand.length - 1; ii >= 0; ii--){
                 for (int jj = 0; jj < tempLand[0].length; jj++) {
-                    System.out.print(tempLand[ii][jj]);
+                    System.out.print(tempLand[ii][jj] + " ");
                 }
                 System.out.println("");
             }
             */
 
+            //Create our Calculator object, and add our FarmField object to it
             Calculator calc = new Calculator();
-
             calc.addField(myFarmField);
 
+            //Calculate the area of our FertileLand objects, and store them
             calc.calculate();
 
+            //Sort and return our list of FertileLand objects
             List<FertileLand> myFertileLands = calc.getFertileLands();
 
-            //System.out.println("Number of fertile lands is "+ myFertileLands.size());
+            //Print our sorted list of FertileLand objects
             for (FertileLand land : myFertileLands) {
                 System.out.print(land.getArea() + " ");
             }

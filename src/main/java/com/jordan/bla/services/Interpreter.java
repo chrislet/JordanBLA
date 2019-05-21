@@ -42,12 +42,8 @@ public class Interpreter {
 
         //Convert to int []
         int[] dataPointsInt = new int[dataPointsString.length];
-        try {
-            for (int ii = 0; ii < dataPointsString.length; ii++) {
-                dataPointsInt[ii] = Integer.parseInt(dataPointsString[ii]);
-            }
-        } catch (NumberFormatException | NullPointerException e) {
-            throw e;
+        for (int ii = 0; ii < dataPointsString.length; ii++) {
+            dataPointsInt[ii] = Integer.parseInt(dataPointsString[ii]);
         }
 
         //Check if the x coordinates are outside the boundaries
@@ -64,7 +60,7 @@ public class Interpreter {
             }
         }
 
-        //Check if the vertices are bottom left to top right, we accept do accept zero height or zero width
+        //Check if the vertices are bottom left to top right
         for (int ii = 0; ii < dataPointsInt.length; ii += 4) {
             if (dataPointsInt[ii + 2] < dataPointsInt[ii] || dataPointsInt[ii + 3] < dataPointsInt[ii + 1]) {
                 throw new LandInputOutOfOrderException("Data points out of order "

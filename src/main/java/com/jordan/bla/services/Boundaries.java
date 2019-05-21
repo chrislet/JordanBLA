@@ -12,6 +12,7 @@ public class Boundaries {
     private int upperXbound;
     private int upperYbound;
 
+    //Read from the BarrenLand.properties file, and grab our bounds.
     public Boundaries() {
         try {
             InputStream input = new FileInputStream("src/main/resources/BarrenLand.properties");
@@ -22,7 +23,6 @@ public class Boundaries {
             }
             propFile.load(input);
             input.close();
-            //Set boundaries
             this.lowerXbound = Integer.parseInt(propFile.getProperty("field.lowerXbound"));
             this.lowerYbound = Integer.parseInt(propFile.getProperty("field.lowerYbound"));
             this.upperXbound = Integer.parseInt(propFile.getProperty("field.upperXbound"));
