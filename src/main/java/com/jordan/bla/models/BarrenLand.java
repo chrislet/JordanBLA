@@ -8,7 +8,7 @@ public class BarrenLand {
 
     }
 
-    public int[] getCoordinates() {
+    int[] getCoordinates() {
 
         return coordinates;
     }
