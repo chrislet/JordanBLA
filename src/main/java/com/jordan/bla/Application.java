@@ -52,7 +52,7 @@ public class Application {
 
             //Create our FarmField
             FarmField myFarmField = new FarmField();
-            myFarmField.createLand();
+            myFarmField.createFarmFieldArray();
 
             //Chop our input into individual BarrenLand objects, and add them to the FarmField
             int[] barrenPoints = new int[4];
@@ -67,16 +67,8 @@ public class Application {
 
             }
 
-            //Useful FarmField printer, not advisable to uncomment for large size FarmFields
-            /*
-            LandState[] [] tempLand = myFarmField.getLand();
-            for (int ii = tempLand.length - 1; ii >= 0; ii--){
-                for (int jj = 0; jj < tempLand[0].length; jj++) {
-                    System.out.print(tempLand[ii][jj] + " ");
-                }
-                System.out.println("");
-            }
-            */
+
+
 
             //Create our Calculator object, and add our FarmField object to it
             Calculator calc = new Calculator();

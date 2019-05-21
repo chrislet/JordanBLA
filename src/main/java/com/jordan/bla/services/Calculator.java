@@ -30,7 +30,7 @@ public class Calculator {
 
     public void addField(FarmField myFarmField) {
 
-        this.farmFieldArray = myFarmField.getLand();
+        this.farmFieldArray = myFarmField.getFarmFieldArray();
     }
 
     //Sort and return our list of FertileLand objects.
