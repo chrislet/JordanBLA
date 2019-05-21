@@ -29,7 +29,8 @@ class CalculatorSpec extends Specification{
 
     def 'test findNextFertileLandAllBarren' (){
         given:"A FarmField of size 2 x 3, and a piece of BarrenLand," +
-                "Set points ( 0 , 0 ) and ( 1 , 2 ) for the BarrenLand"
+                "Set points ( 0 , 0 ) and ( 1 , 2 ) for the BarrenLand" +
+                "Making the whole FarmField Barren"
         def aCalculator = new Calculator()
         def aFarmField = new FarmField()
         aFarmField.lowerXbound = 0
@@ -40,10 +41,12 @@ class CalculatorSpec extends Specification{
         aBarren.setCoordinates([0, 0, 1, 2] as int[])
 
         when:"Create a FarmField,and add the Barren land to it," +
-                "Then add the FarmField to our Calculator"
+                "Then add the FarmField to our Calculator" +
+                "And attempt to find the next Fertile land"
         aFarmField.createFarmFieldArray()
         aFarmField.addBarrenLand(aBarren)
         aCalculator.addField(aFarmField)
+        aCalculator.findNextFertileLand()
 
         then:"We should receive an exception"
         ArrayIndexOutOfBoundsException e = thrown()
