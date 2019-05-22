@@ -10,8 +10,7 @@ public class FarmField {
     private int upperYbound;
     private LandState[][] farmFieldArray;
 
-    public FarmField() {
-        Boundaries boundary = new Boundaries();
+    public FarmField(Boundaries boundary) {
         this.lowerXbound = boundary.getLowerXbound();
         this.lowerYbound = boundary.getLowerYbound();
         this.upperXbound = boundary.getUpperXbound();

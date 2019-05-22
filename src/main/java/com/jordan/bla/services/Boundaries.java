@@ -1,8 +1,8 @@
 package com.jordan.bla.services;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class Boundaries {
@@ -14,27 +14,22 @@ public class Boundaries {
 
     //Read from the BarrenLand.properties file, and grab our bounds.
     public Boundaries() {
+        final Properties propFile = new Properties();
+        try (final FileInputStream stream = new FileInputStream("src/main/resources/BarrenLand.properties")) {
+            propFile.load(stream);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to find the properties file");
+        } catch (IOException e) {
+            System.out.println("IOException, unable to read the properties file");
+        }
+
         try {
-            InputStream input = new FileInputStream("src/main/resources/BarrenLand.properties");
-            Properties propFile = new Properties();
-            if (input == null) {
-                System.out.println("Unable to load properties file.");
-                System.exit(1);
-            }
-            propFile.load(input);
-            input.close();
             this.lowerXbound = Integer.parseInt(propFile.getProperty("field.lowerXbound"));
             this.lowerYbound = Integer.parseInt(propFile.getProperty("field.lowerYbound"));
             this.upperXbound = Integer.parseInt(propFile.getProperty("field.upperXbound"));
             this.upperYbound = Integer.parseInt(propFile.getProperty("field.upperYbound"));
-        } catch (IOException e) {
-            System.out.println("Unable to load properties file.");
-            e.printStackTrace();
-            System.exit(1);
         } catch (NumberFormatException e) {
             System.out.println("Properties file is misconfigured.");
-            e.printStackTrace();
-            System.exit(1);
         }
     }
 

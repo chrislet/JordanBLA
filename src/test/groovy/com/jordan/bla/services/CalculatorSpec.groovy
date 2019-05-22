@@ -1,5 +1,6 @@
 package com.jordan.bla.services
 
+import com.jordan.bla.models.BLAExceptions
 import com.jordan.bla.models.BarrenLand
 import com.jordan.bla.models.FarmField
 import com.jordan.bla.models.LandState
@@ -9,8 +10,9 @@ class CalculatorSpec extends Specification{
     def 'test findNextFertileLand' (){
         given:"A FarmField of size 2 x 3, and a piece of BarrenLand," +
                 "Set points ( 0 , 0 ) and ( 1 , 1 ) for the BarrenLand"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -32,8 +34,9 @@ class CalculatorSpec extends Specification{
         given:"A FarmField of size 2 x 3, and a piece of BarrenLand," +
                 "Set points ( 0 , 0 ) and ( 1 , 2 ) for the BarrenLand" +
                 "Making the whole FarmField Barren"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -60,8 +63,9 @@ class CalculatorSpec extends Specification{
 
     def 'test findVisitedTouchingFertile'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -84,8 +88,9 @@ class CalculatorSpec extends Specification{
     def 'test findVisitedTouchingFertileAllBarren'(){
         given:"A FarmField of size 2 x 3" +
                 "With a Barren object the size of the FarmField"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -108,7 +113,7 @@ class CalculatorSpec extends Specification{
         aCalculator.findVisitedTouchingFertile()
 
         then:"Expect an exception"
-        Calculator.DoneVisitingException ex = thrown()
+        BLAExceptions.DoneVisitingException ex = thrown()
         ex.message =="Done visiting."
     }
 
@@ -117,8 +122,9 @@ class CalculatorSpec extends Specification{
         "A FarmField of size 400 x 600" +
                 "With a Barren object with the following coordinates" +
                 "{“0 292 399 307”}"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 399
@@ -149,8 +155,9 @@ class CalculatorSpec extends Specification{
         "A FarmField of size 400 x 600" +
                 "With 4 Barren objects with the following coordinates" +
                 "{“48 192 351 207”, “48 392 351 407”, “120 52 135 547”, “260 52 275 547”} "
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 399
@@ -187,8 +194,9 @@ class CalculatorSpec extends Specification{
     }
 
     def 'test CalculateAllBarren'(){
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -217,8 +225,9 @@ class CalculatorSpec extends Specification{
 
     def 'test lookN'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -238,8 +247,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookNAtTopOfField'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -258,8 +268,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookNFromOutOfBounds'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -278,8 +289,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookS'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -299,8 +311,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookSAtBottomOfField'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -319,8 +332,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookSFromOutOfBounds'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -339,8 +353,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookE'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -360,8 +375,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookEAtRightOfField'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -380,8 +396,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookEFromOutOfBounds'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -400,8 +417,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookW'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -421,8 +439,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookWAtLeftOfField'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -441,8 +460,9 @@ class CalculatorSpec extends Specification{
     }
     def 'test lookWFromOutOfBounds'(){
         given:"A FarmField of size 2 x 3"
-        def aCalculator = new Calculator()
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aCalculator = new Calculator(boundary)
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1

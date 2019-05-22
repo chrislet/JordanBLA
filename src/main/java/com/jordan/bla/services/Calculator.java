@@ -1,6 +1,7 @@
 package com.jordan.bla.services;
 
 
+import com.jordan.bla.models.BLAExceptions;
 import com.jordan.bla.models.FarmField;
 import com.jordan.bla.models.FertileLand;
 import com.jordan.bla.models.LandState;
@@ -20,8 +21,7 @@ public class Calculator {
     private List<FertileLand> fertileLands = new ArrayList<>();
 
 
-    public Calculator() {
-        Boundaries boundary = new Boundaries();
+    public Calculator(Boundaries boundary) {
         this.lowerXbound = boundary.getLowerXbound();
         this.lowerYbound = boundary.getLowerYbound();
         this.upperXbound = boundary.getUpperXbound();
@@ -146,7 +146,7 @@ public class Calculator {
 
             try {
                 coords = findVisitedTouchingFertile();
-            } catch (DoneVisitingException ex) {
+            } catch (BLAExceptions.DoneVisitingException ex) {
                 //We must be done visiting this section of land, create our FertileLand object, and return it
                 FertileLand myFertileLand = new FertileLand();
                 myFertileLand.setArea(area);
@@ -187,7 +187,7 @@ public class Calculator {
     }
 
     //Search the entire FarmField for any Visited land that is nearby any Fertile land
-    private int[] findVisitedTouchingFertile() throws DoneVisitingException {
+    private int[] findVisitedTouchingFertile() throws BLAExceptions.DoneVisitingException {
         int[] coords = new int[2];
         coords[0] = -1;
         coords[1] = -1;
@@ -198,7 +198,7 @@ public class Calculator {
                     try {
                         coords = isNearFertileLand(ii, jj);
                         return coords;
-                    } catch (NoFertileLandSurroundingException e) {
+                    } catch (BLAExceptions.NoFertileLandSurroundingException e) {
                         //There's nothing here, let's find somewhere else
                     }
 
@@ -206,12 +206,12 @@ public class Calculator {
             }
         }
 
-        throw new DoneVisitingException("Done visiting.");
+        throw new BLAExceptions.DoneVisitingException("Done visiting.");
 
     }
 
     //Search the immediate coordinates for nearby fertile land that can be accessed
-    private int[] isNearFertileLand(int x, int y) throws NoFertileLandSurroundingException {
+    private int[] isNearFertileLand(int x, int y) throws BLAExceptions.NoFertileLandSurroundingException {
         int[] coords = new int[2];
         LandState north;
         LandState south;
@@ -264,7 +264,7 @@ public class Calculator {
                 return coords;
         }
         //We must not be near any Fertile land
-        throw new NoFertileLandSurroundingException("No more fertile land here.");
+        throw new BLAExceptions.NoFertileLandSurroundingException("No more fertile land here.");
     }
 
     //Without actually moving around, just grab the value of the coordinates in the 4 cardinal directions
@@ -297,18 +297,6 @@ public class Calculator {
             return LandState.OutOfBounds;
         } else {
             return farmFieldArray[x - 1][y];
-        }
-    }
-
-    private class DoneVisitingException extends Throwable {
-        private DoneVisitingException(String message) {
-            super(message);
-        }
-    }
-
-    private class NoFertileLandSurroundingException extends Throwable {
-        private NoFertileLandSurroundingException(String message) {
-            super(message);
         }
     }
 

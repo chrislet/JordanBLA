@@ -1,12 +1,13 @@
 package com.jordan.bla;
 
 
+import com.jordan.bla.models.BLAExceptions;
 import com.jordan.bla.models.BarrenLand;
 import com.jordan.bla.models.FarmField;
 import com.jordan.bla.models.FertileLand;
-import com.jordan.bla.models.LandState;
+import com.jordan.bla.services.Boundaries;
 import com.jordan.bla.services.Calculator;
-import com.jordan.bla.services.Interpreter;
+import com.jordan.bla.services.InputParser;
 
 import java.util.List;
 import java.util.Scanner;
@@ -24,21 +25,24 @@ public class Application {
         System.out.println("You can input multiple barren sections on one line, or type \"exit\" to end the program.");
         while (scan.hasNextLine()) {
 
+            //Grab our Boundaries
+            Boundaries boundary = new Boundaries();
+
             input = scan.nextLine();
-            Interpreter interpret = new Interpreter();
+            InputParser interpret = new InputParser(boundary);
             try {
                 dataPointsInt = interpret.parseInput(input);
-            } catch (Interpreter.LandOutOfBoundsException e) {
+            } catch (BLAExceptions.LandOutOfBoundsException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your barren land was outside of the boundary of the total land.");
                 System.out.println("Please try again.");
                 continue;
-            } catch (Interpreter.LandInputOutOfOrderException e) {
+            } catch (BLAExceptions.LandInputOutOfOrderException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your barren land was not input with bottom left first, followed by top right.");
                 System.out.println("Please try again.");
                 continue;
-            } catch (Interpreter.InsufficientDataPointsException e) {
+            } catch (BLAExceptions.InsufficientDataPointsException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Your barren land did not have sufficient data points to draw a rectangle.");
                 System.out.println("Please try again.");
@@ -54,8 +58,9 @@ public class Application {
             if (dataPointsInt.length == 0){
                 break;
             }
+
             //Create our FarmField
-            FarmField myFarmField = new FarmField();
+            FarmField myFarmField = new FarmField(boundary);
             myFarmField.createFarmFieldArray();
 
             //Chop our input into individual BarrenLand objects, and add them to the FarmField
@@ -75,7 +80,7 @@ public class Application {
 
 
             //Create our Calculator object, and add our FarmField object to it
-            Calculator calc = new Calculator();
+            Calculator calc = new Calculator(boundary);
             calc.addField(myFarmField);
 
             //Calculate the area of our FertileLand objects, and store them

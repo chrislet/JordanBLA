@@ -1,12 +1,14 @@
 package com.jordan.bla.models
 
+import com.jordan.bla.services.Boundaries
 import spock.lang.Specification
 
 class FarmFieldSpec extends Specification {
 
     def 'test createFarmFieldArray' (){
         given:"A FarmField of size 2 x 3"
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
@@ -26,7 +28,8 @@ class FarmFieldSpec extends Specification {
 
     def 'test createPartialFarmFieldArray' (){
         given:"A FarmField of size 2 x 3, with the lowerYbound being 1"
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 1
         aFarmField.upperXbound = 1
@@ -47,7 +50,8 @@ class FarmFieldSpec extends Specification {
     def 'test addBarrenLand' (){
         given:"A FarmField of size 2 x 3, and a piece of BarrenLand," +
                 "Set points ( 0 , 1 ) and ( 1 , 2 ) for the BarrenLand"
-        def aFarmField = new FarmField()
+        def boundary = new Boundaries()
+        def aFarmField = new FarmField(boundary)
         aFarmField.lowerXbound = 0
         aFarmField.lowerYbound = 0
         aFarmField.upperXbound = 1
