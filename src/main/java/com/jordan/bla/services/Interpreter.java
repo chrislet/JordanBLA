@@ -23,7 +23,7 @@ public class Interpreter {
         //Check if the user is attempting to exit the program
         if (stringInput.toLowerCase().contains("exit")) {
             System.out.println("Have a nice day!");
-            System.exit(0);
+            return new int [0];
         }
         //Remove all non integers and non spaces from the input, cut the spaces down to one space
         stringInput = stringInput.replaceAll("[^0-9 -]", " ");

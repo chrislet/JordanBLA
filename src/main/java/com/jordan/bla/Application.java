@@ -50,6 +50,10 @@ public class Application {
                 continue;
             }
 
+            //User must be attempting to exit the program
+            if (dataPointsInt.length == 0){
+                break;
+            }
             //Create our FarmField
             FarmField myFarmField = new FarmField();
             myFarmField.createFarmFieldArray();
