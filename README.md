@@ -1,8 +1,8 @@
-#JordanBLA
+# JordanBLA
 JordanBLA is a Barren Land Analysis application written by Christopher Jordan as part of the Code Review process
 for a job application.
 
-#Problem Statement
+# Problem Statement
 You have a farm of 400m by 600m where coordinates of the field are from (0, 0) to (399, 599).
 A portion of the farm is barren, and all the barren land is in the form of rectangles.
 Due to these rectangles of barren land, the remaining area of fertile land is in no particular shape.
@@ -21,6 +21,6 @@ and the last two integers are the coordinates of the top right corner.
 Output 
 Output all the fertile land area in square meters, sorted from smallest area to greatest, separated by a space. 
  
-#Sample Input and Output
+# Sample Input and Output
 {“0 292 399 307”} -> 116800  116800
 {“48 192 351 207”, “48 392 351 407”, “120 52 135 547”, “260 52 275 547”} -> 22816 192608
