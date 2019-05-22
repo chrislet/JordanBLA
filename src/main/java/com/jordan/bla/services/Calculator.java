@@ -57,7 +57,7 @@ public class Calculator {
             int x = nextFertileLand[0];
             int y = nextFertileLand[1];
 
-            this.fertileLands.add(floodFertileLand(x, y));
+            this.fertileLands.add(visitFertileLand(x, y));
             try {
                 nextFertileLand = findNextFertileLand();
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -67,11 +67,11 @@ public class Calculator {
         }
     }
 
-    //Change the state of Fertile land to Flooded,
+    //Change the state of Fertile land to Visited,
     //Add 1 to the area of our Fertile land object counter,
-    //Find an adjacent piece of Fertile land to flood, and go there
-    private FertileLand floodFertileLand(int x, int y) {
-        this.farmFieldArray[x][y] = LandState.Flooded;
+    //Find an adjacent piece of Fertile land to visit, and go there
+    private FertileLand visitFertileLand(int x, int y) {
+        this.farmFieldArray[x][y] = LandState.Visited;
         int area = 1;
         LandState north;
         LandState south;
@@ -85,13 +85,13 @@ public class Calculator {
             switch (north) {
                 case OutOfBounds:
                 case Barren:
-                case Flooded:
+                case Visited:
                     break;
                 case Fertile:
                     y++;
                     area++;
-                    this.farmFieldArray[x][y] = LandState.Flooded;
-                    //System.out.println("Flooded " + x + " and " + y + " ");
+                    this.farmFieldArray[x][y] = LandState.Visited;
+                    //System.out.println("Visited " + x + " and " + y + " ");
                     continue;
             }
 
@@ -100,13 +100,13 @@ public class Calculator {
             switch (south) {
                 case OutOfBounds:
                 case Barren:
-                case Flooded:
+                case Visited:
                     break;
                 case Fertile:
                     y--;
                     area++;
-                    this.farmFieldArray[x][y] = LandState.Flooded;
-                    //System.out.println("Flooded " + x + " and " + y + " ");
+                    this.farmFieldArray[x][y] = LandState.Visited;
+                    //System.out.println("Visited " + x + " and " + y + " ");
                     continue;
             }
 
@@ -115,13 +115,13 @@ public class Calculator {
             switch (east) {
                 case OutOfBounds:
                 case Barren:
-                case Flooded:
+                case Visited:
                     break;
                 case Fertile:
                     x++;
                     area++;
-                    this.farmFieldArray[x][y] = LandState.Flooded;
-                    //System.out.println("Flooded " + x + " and " + y + " ");
+                    this.farmFieldArray[x][y] = LandState.Visited;
+                    //System.out.println("Visited " + x + " and " + y + " ");
                     continue;
             }
 
@@ -130,31 +130,31 @@ public class Calculator {
             switch (west) {
                 case OutOfBounds:
                 case Barren:
-                case Flooded:
+                case Visited:
                     break;
                 case Fertile:
                     x--;
                     area++;
-                    this.farmFieldArray[x][y] = LandState.Flooded;
-                    //System.out.println("Flooded " + x + " and " + y + " ");
+                    this.farmFieldArray[x][y] = LandState.Visited;
+                    //System.out.println("Visited " + x + " and " + y + " ");
                     continue;
             }
 
-            //If we're stuck in a corner, we might have flooded the entire Fertile section, or we might have
-            //Just put ourselves in a bind, we should check our FarmField for any Flooded land touching Fertile land
+            //If we're stuck in a corner, we might have visited the entire Fertile section, or we might have
+            //Just put ourselves in a bind, we should check our FarmField for any Visited land touching Fertile land
             int[] coords;
 
             try {
-                coords = findFloodTouchingFertile();
-            } catch (DoneFloodingException ex) {
-                //We must be done flooding this section of land, create our FertileLand object, and return it
+                coords = findVisitedTouchingFertile();
+            } catch (DoneVisitingException ex) {
+                //We must be done visiting this section of land, create our FertileLand object, and return it
                 FertileLand myFertileLand = new FertileLand();
                 myFertileLand.setArea(area);
                 return myFertileLand;
             }
 
-            //We are not done flooding, we've found a plot of Flooded land that has nearby Fertile land
-            //Go to the plot of Flooded land, and start looking around for more fertile land to flood
+            //We are not done visiting, we've found a plot of Visited land that has nearby Fertile land
+            //Go to the plot of Visited land, and start looking around for more fertile land to visit
             x = coords[0];
             y = coords[1];
 
@@ -168,8 +168,8 @@ public class Calculator {
         int yCoord = -1;
         int[] nextFertileLand = new int[2];
         xLoop:
-        for (int ii = lowerXbound; ii <= upperXbound; ii++) {
-            for (int jj = lowerYbound; jj <= upperYbound; jj++) {
+        for (int ii = lowerXbound; ii < upperXbound; ii++) {
+            for (int jj = lowerYbound; jj < upperYbound; jj++) {
                 if (farmFieldArray[ii][jj] == LandState.Fertile) {
                     xCoord = ii;
                     yCoord = jj;
@@ -186,15 +186,15 @@ public class Calculator {
         return nextFertileLand;
     }
 
-    //Search the entire FarmField for any Flooded land that is nearby any Fertile land
-    private int[] findFloodTouchingFertile() throws DoneFloodingException {
+    //Search the entire FarmField for any Visited land that is nearby any Fertile land
+    private int[] findVisitedTouchingFertile() throws DoneVisitingException {
         int[] coords = new int[2];
         coords[0] = -1;
         coords[1] = -1;
         for (int ii = lowerXbound; ii <= upperXbound; ii++) {
             for (int jj = lowerYbound; jj <= upperYbound; jj++) {
-                //Look around here for unflooded, but still fertile land
-                if (farmFieldArray[ii][jj] == LandState.Flooded) {
+                //Look around here for unvisited, but still fertile land
+                if (farmFieldArray[ii][jj] == LandState.Visited) {
                     try {
                         coords = isNearFertileLand(ii, jj);
                         return coords;
@@ -206,7 +206,7 @@ public class Calculator {
             }
         }
 
-        throw new DoneFloodingException("Done flooding.");
+        throw new DoneVisitingException("Done visiting.");
 
     }
 
@@ -225,7 +225,7 @@ public class Calculator {
         switch (north) {
             case OutOfBounds:
             case Barren:
-            case Flooded:
+            case Visited:
                 break;
             case Fertile:
                 return coords;
@@ -236,7 +236,7 @@ public class Calculator {
         switch (south) {
             case OutOfBounds:
             case Barren:
-            case Flooded:
+            case Visited:
                 break;
             case Fertile:
                 return coords;
@@ -247,7 +247,7 @@ public class Calculator {
         switch (east) {
             case OutOfBounds:
             case Barren:
-            case Flooded:
+            case Visited:
                 break;
             case Fertile:
                 return coords;
@@ -258,7 +258,7 @@ public class Calculator {
         switch (west) {
             case OutOfBounds:
             case Barren:
-            case Flooded:
+            case Visited:
                 break;
             case Fertile:
                 return coords;
@@ -300,8 +300,8 @@ public class Calculator {
         }
     }
 
-    private class DoneFloodingException extends Throwable {
-        private DoneFloodingException(String message) {
+    private class DoneVisitingException extends Throwable {
+        private DoneVisitingException(String message) {
             super(message);
         }
     }

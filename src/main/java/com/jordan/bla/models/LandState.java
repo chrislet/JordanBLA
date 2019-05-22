@@ -4,6 +4,6 @@ public enum LandState {
     OutOfBounds,
     Barren,
     Fertile,
-    Flooded
+    Visited
 }
 
