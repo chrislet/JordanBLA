@@ -215,4 +215,249 @@ class CalculatorSpec extends Specification{
         buffer.toString() == "There is no more fertile land.\r\nDid you make all the land barren?\r\n"
     }
 
+    def 'test lookN'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+        aCalculator.farmFieldArray[0][1] = LandState.Visited
+
+        then:"From ( 0 , 0 ) looking North, we should see Visited"
+        aCalculator.lookN(0,0) == LandState.Visited
+    }
+    def 'test lookNAtTopOfField'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 0 , 2 ) looking North, we should see OutOfBounds"
+        aCalculator.lookN(0,2) == LandState.OutOfBounds
+    }
+    def 'test lookNFromOutOfBounds'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 4 , 0 ) looking North, we should see OutOfBounds"
+        aCalculator.lookN(4,0) == LandState.OutOfBounds
+    }
+    def 'test lookS'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+        aCalculator.farmFieldArray[0][1] = LandState.Visited
+
+        then:"From ( 0 , 2 ) looking South, we should see Visited"
+        aCalculator.lookS(0,2) == LandState.Visited
+    }
+    def 'test lookSAtBottomOfField'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 0 , 0 ) looking South, we should see OutOfBounds"
+        aCalculator.lookS(0,0) == LandState.OutOfBounds
+    }
+    def 'test lookSFromOutOfBounds'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 4 , 0 ) looking South, we should see OutOfBounds"
+        aCalculator.lookS(4,0) == LandState.OutOfBounds
+    }
+    def 'test lookE'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+        aCalculator.farmFieldArray[1][1] = LandState.Visited
+
+        then:"From ( 0 , 1 ) looking East, we should see Visited"
+        aCalculator.lookE(0,1) == LandState.Visited
+    }
+    def 'test lookEAtRightOfField'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 1 , 0 ) looking East, we should see OutOfBounds"
+        aCalculator.lookE(1,0) == LandState.OutOfBounds
+    }
+    def 'test lookEFromOutOfBounds'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 0 , 4 ) looking East, we should see OutOfBounds"
+        aCalculator.lookE(0,4) == LandState.OutOfBounds
+    }
+    def 'test lookW'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+        aCalculator.farmFieldArray[0][1] = LandState.Visited
+
+        then:"From ( 1 , 1 ) looking West, we should see Visited"
+        aCalculator.lookW(1,1) == LandState.Visited
+    }
+    def 'test lookWAtLeftOfField'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 0 , 0 ) looking West, we should see OutOfBounds"
+        aCalculator.lookW(0,0) == LandState.OutOfBounds
+    }
+    def 'test lookWFromOutOfBounds'(){
+        given:"A FarmField of size 2 x 3"
+        def aCalculator = new Calculator()
+        def aFarmField = new FarmField()
+        aFarmField.lowerXbound = 0
+        aFarmField.lowerYbound = 0
+        aFarmField.upperXbound = 1
+        aFarmField.upperYbound = 2
+        aCalculator.lowerXbound = 0
+        aCalculator.lowerYbound = 0
+        aCalculator.upperXbound = 1
+        aCalculator.upperYbound = 2
+
+        when:"Create a FarmField then add the FarmField to our Calculator"
+        aFarmField.createFarmFieldArray()
+        aCalculator.addField(aFarmField)
+
+        then:"From ( 0 , 4 ) looking West, we should see OutOfBounds"
+        aCalculator.lookN(0,4) == LandState.OutOfBounds
+    }
+
 }

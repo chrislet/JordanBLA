@@ -269,7 +269,7 @@ public class Calculator {
 
     //Without actually moving around, just grab the value of the coordinates in the 4 cardinal directions
     private LandState lookN(int x, int y) {
-        if (y >= upperYbound) {
+        if (y >= upperYbound || x < lowerXbound || x > upperXbound) {
             return LandState.OutOfBounds;
         } else {
             return farmFieldArray[x][y + 1];
@@ -277,7 +277,7 @@ public class Calculator {
     }
 
     private LandState lookS(int x, int y) {
-        if (y <= lowerYbound) {
+        if (y <= lowerYbound || x < lowerXbound || x > upperXbound) {
             return LandState.OutOfBounds;
         } else {
             return farmFieldArray[x][y - 1];
@@ -285,7 +285,7 @@ public class Calculator {
     }
 
     private LandState lookE(int x, int y) {
-        if (x >= upperXbound) {
+        if (x >= upperXbound || y < lowerYbound || y > upperYbound) {
             return LandState.OutOfBounds;
         } else {
             return farmFieldArray[x + 1][y];
@@ -293,7 +293,7 @@ public class Calculator {
     }
 
     private LandState lookW(int x, int y) {
-        if (x <= lowerXbound) {
+        if (x <= lowerXbound || y < lowerYbound || y > upperYbound) {
             return LandState.OutOfBounds;
         } else {
             return farmFieldArray[x - 1][y];
