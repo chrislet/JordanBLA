@@ -12,6 +12,7 @@ The largest area of land that is not covered by any of the rectangles of barren 
 Read input from STDIN. Print output to STDOUT 
 
 Input 
+
 You are given a set of rectangles that contain the barren land. 
 These rectangles are defined in a string, which consists of four integers separated by single spaces, 
 with no additional spaces in the string. 
@@ -19,8 +20,10 @@ The first two integers are the coordinates of the bottom left corner in the give
 and the last two integers are the coordinates of the top right corner. 
 
 Output 
+
 Output all the fertile land area in square meters, sorted from smallest area to greatest, separated by a space. 
  
 # Sample Input and Output
 {“0 292 399 307”} -> 116800  116800
+
 {“48 192 351 207”, “48 392 351 407”, “120 52 135 547”, “260 52 275 547”} -> 22816 192608
