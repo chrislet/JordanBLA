@@ -1,6 +1,6 @@
 # JordanBLA
 JordanBLA is a Barren Land Analysis application written by Christopher Jordan as part of the Code Review process
-for a job application.
+for an exercise.
 
 # Problem Statement
 You have a farm of 400m by 600m where coordinates of the field are from (0, 0) to (399, 599).
